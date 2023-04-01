@@ -14,20 +14,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use tokio::sync::oneshot;
-
-use crate::error::ClientError;
-use crate::pb::{QueryRouteRequest, QueryRouteResponse};
-
-pub(crate) struct RocketMQCommand {
-    pub(crate) peer: String,
-    pub(crate) err_tx: oneshot::Sender<ClientError>,
-    pub(crate) detail: RocketMQCommandType,
-}
-
-pub(crate) enum RocketMQCommandType {
-    QueryRoute {
-        request: tonic::Request<QueryRouteRequest>,
-        resp_tx: oneshot::Sender<QueryRouteResponse>,
-    },
-}
+pub struct ClientOption {}

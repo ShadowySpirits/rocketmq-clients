@@ -16,26 +16,34 @@
  */
 use slog::Logger;
 
-use crate::{client, error};
+use crate::client::Client;
+use crate::conf::ClientOption;
+use crate::error::ClientError;
+use crate::log;
 
 struct Producer {
-    client: client::Client,
+    logger: Logger,
+    client: Client,
 }
 
 impl Producer {
-    pub async fn new<T>(logger: Logger, topics: T) -> Result<Self, error::ClientError>
+    pub async fn new<T>(option: ClientOption, topics: T) -> Result<Self, ClientError>
     where
         T: IntoIterator,
         T::Item: AsRef<str>,
     {
-        let access_point = "localhost:8081";
-        let client = client::Client::new(logger, access_point)?;
-        for _topic in topics.into_iter() {
-            // client.subscribe(topic.as_ref()).await;
+        let logger = log::logger(option);
+        let access_url = "localhost:8081";
+        let client = Client::new(&logger, access_url.to_string())?;
+        for topic in topics.into_iter() {
+            client
+                .topic_route(topic.as_ref(), true)
+                .await
+                .expect("TODO: panic message");
         }
 
-        Ok(Producer { client })
+        Ok(Producer { logger, client })
     }
 
-    pub fn start(&mut self) {}
+    pub fn start(&self) {}
 }

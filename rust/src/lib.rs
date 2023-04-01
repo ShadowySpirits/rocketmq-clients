@@ -19,8 +19,11 @@ mod pb;
 
 mod error;
 
-mod command;
-
 mod client;
 
+mod command;
+mod conf;
+mod dispatcher;
+mod log;
 mod producer;
+mod session;
