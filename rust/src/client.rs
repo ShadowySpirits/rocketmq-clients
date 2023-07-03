@@ -109,6 +109,10 @@ impl Client {
         self.telemetry_command_tx.is_some()
     }
 
+    pub(crate) fn has_transaction_checker(&self) -> bool {
+        self.transaction_checker.is_some()
+    }
+
     pub(crate) fn set_transaction_checker(&mut self, transaction_checker: Box<TransactionChecker>) {
         if self.is_started() {
             panic!("client {} is started, can not be modified", self.id)
